@@ -31,16 +31,19 @@ export const AccessibilityPanel = ({ state: controlledState, onStateChange }: Ac
   };
 
   return (
-    <div className="position-fixed top-50 end-0 translate-middle-y p-3 accessibility-panel-container">
+    <div className="position-fixed top-50 end-0 translate-middle-y p-3" style={{ zIndex: 99999 }}>
       {state === 'minimized' && (
-        <button
-          className="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center accessibility-panel-trigger"
-          onClick={() => setState('open')}
-          aria-label="Abrir panel"
-        >
-          ♿
-        </button>
+      <button
+        className="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center p-0"
+        style={{ width: '56px', height: '56px', fontSize: '1.75rem' }}
+        onClick={() => setState('open')}
+        aria-label="Abrir panel"
+      >
+        ♿
+      </button>
       )}
+
+      
 
       {state === 'open' && (
         <div className="card shadow-lg p-3 accessibility-panel-card">

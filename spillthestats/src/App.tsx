@@ -1,29 +1,24 @@
 import { useState } from "react";
+import { Link, Routes, Route } from "react-router-dom";
 import { AccessibilityPanel, type PanelState } from "./components/AccessibilityPanel";
 import { BionicText } from "./components/BionicText";
 import { useBionicText } from "./hooks/useBionicText";
 import './styles/marquee.css';
+import ProfilePage from "./pages/ProfilePage";
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  
   const [accessibilityState, setAccessibilityState] = useState<PanelState>('minimized');
+  const { isBionicActive } = useBionicText();
 
   const toggleAccessibility = () => {
-    setAccessibilityState((prev: PanelState) => {
-      // Si está cerrado → mostrar el botón flotante
-      if (prev === 'closed') return 'minimized';
-      // En cualquier otro caso → ocultar todo
-      return 'closed';
-    });
+    setAccessibilityState((prev: PanelState) => (prev === 'closed' ? 'minimized' : 'closed'));
   };
-
-  const { isBionicActive } = useBionicText();
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-white text-dark">
 
-      {/* Panel con el sistema de 3 estados */}
+      {/* Accessibility Panel */}
       <AccessibilityPanel
         state={accessibilityState}
         onStateChange={setAccessibilityState}
@@ -37,21 +32,19 @@ export default function App() {
       </div>
 
       {/* Navigation Bar */}
-
       <nav className="w-100 border-bottom border-dark px-4 px-sm-5 py-3 d-flex align-items-center justify-content-between">
-        {/* Logo */}
         <div className="d-flex align-items-center gap-3">
-          <div className="d-flex align-items-center justify-content-center border border-2 border-dashed border-dark app-logo-mark">
+          <Link to="/" className="d-flex align-items-center justify-content-center border border-2 border-dashed border-dark app-logo-mark text-decoration-none text-dark">
             <span className="font-monospace small">LOGO</span>
-          </div>
+          </Link>
         </div>
 
         {/* Desktop Nav Links */}
         <div className="d-none d-sm-flex align-items-center gap-4 font-monospace small">
-          <a href="#" className="text-dark text-decoration-none">Home</a>
-          <a href="#" className="text-dark text-decoration-none">Análisis</a>
-          <a href="#" className="text-dark text-decoration-none">Champions</a>
-          {/* Toggle*/}
+          <Link to="/" className="text-dark text-decoration-none">Home</Link>
+          <Link to="/" className="text-dark text-decoration-none">Análisis</Link>
+          <Link to="/" className="text-dark text-decoration-none">Champions</Link>
+
           <button
             className="btn btn-sm btn-outline-dark d-flex align-items-center gap-2"
             onClick={toggleAccessibility}
@@ -61,12 +54,15 @@ export default function App() {
             <span>Accesibilidad</span>
           </button>
 
-          <div className="d-flex align-items-center gap-2 border-start border-dark ps-4">
+          <Link
+            to="/profile"
+            className="btn btn-sm btn-outline-dark d-flex align-items-center gap-2 border-start border-dark ps-4 rounded-0 text-decoration-none text-dark"
+          >
             <div className="d-flex align-items-center justify-content-center border border-dashed border-dark rounded-circle app-profile-icon">
               <span className="app-profile-glyph">👤</span>
             </div>
             <span>Perfil</span>
-          </div>
+          </Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -75,9 +71,9 @@ export default function App() {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Menu"
         >
-          <span className={`d-block bg-dark transition-transform app-menu-line ${menuOpen ? "rotate-45 translate-y-1" : ""}`}></span>
-          <span className={`d-block bg-dark transition-opacity app-menu-line ${menuOpen ? "opacity-0" : ""}`}></span>
-          <span className={`d-block bg-dark transition-transform app-menu-line ${menuOpen ? "rotate-n45 translate-y-n1" : ""}`}></span>
+          <span className={`d-block bg-dark transition-transform app-menu-line ${menuOpen ? "rotate-45 translate-y-1" : ""}`} style={{ width: "16px", height: "2px" }}></span>
+          <span className={`d-block bg-dark transition-opacity app-menu-line ${menuOpen ? "opacity-0" : ""}`} style={{ width: "16px", height: "2px" }}></span>
+          <span className={`d-block bg-dark transition-transform app-menu-line ${menuOpen ? "rotate-n45 translate-y-n1" : ""}`} style={{ width: "16px", height: "2px" }}></span>
         </button>
       </nav>
 
@@ -85,11 +81,10 @@ export default function App() {
       {menuOpen && (
         <div className="d-sm-none border-bottom border-dark bg-white">
           <div className="d-flex flex-column px-4 py-3 gap-3 font-monospace small">
-            <a href="#" className="text-dark text-decoration-none border-bottom border-dashed border-secondary pb-2">Home</a>
-            <a href="#" className="text-dark text-decoration-none border-bottom border-dashed border-secondary pb-2">Análisis</a>
-            <a href="#" className="text-dark text-decoration-none border-bottom border-dashed border-secondary pb-2">Champions</a>
+            <Link to="/" className="text-dark text-decoration-none border-bottom border-dashed border-secondary pb-2">Home</Link>
+            <Link to="/" className="text-dark text-decoration-none border-bottom border-dashed border-secondary pb-2">Análisis</Link>
+            <Link to="/" className="text-dark text-decoration-none border-bottom border-dashed border-secondary pb-2">Champions</Link>
 
-            {/* Botón de accesibilidad en menú móvil */}
             <button
               className="btn btn-outline-dark btn-sm d-flex align-items-center gap-2"
               onClick={() => {
@@ -100,60 +95,64 @@ export default function App() {
               <span>♿</span> Accesibilidad
             </button>
 
-            <a href="#" className="d-flex align-items-center gap-2 text-dark text-decoration-none">
+            <Link to="/profile" className="btn btn-outline-dark btn-sm d-flex align-items-center gap-2 text-decoration-none text-dark">
               <div className="d-flex align-items-center justify-content-center border border-dashed border-dark rounded-circle app-mobile-profile-icon">
                 <span className="app-profile-glyph">👤</span>
               </div>
               Perfil
-            </a>
+            </Link>
           </div>
         </div>
       )}
 
-      {/* Hero Section - Two halves */}
-      <section className="flex-grow-1 d-flex align-items-stretch">
-        <div className="container-fluid p-0 d-flex flex-column flex-md-row">
-          
-          {/* Left half - Image placeholder */}
-          <div className="col-12 col-md-6 border-bottom border-md-end border-dark d-flex align-items-center justify-content-center bg-light app-hero-image-placeholder">
-            <div className="d-flex flex-column align-items-center justify-content-center gap-2 border border-2 border-dashed border-dark p-5 app-hero-image-frame">
-              <span className="app-hero-image-icon">🖼️</span>
-              <span className="font-monospace small">[ HERO IMAGE ]</span>
-              <span className="font-monospace small text-secondary">placeholder</span>
+      {/* Main Content Routes */}
+      <main className="flex-grow-1 d-flex align-items-stretch">
+        <Routes>
+          <Route path="/" element={
+            <div className="container-fluid p-0 d-flex flex-column flex-md-row w-100">
+              {/* Left half - Image placeholder */}
+              <div className="col-12 col-md-6 border-bottom border-md-end border-dark d-flex align-items-center justify-content-center bg-light app-hero-image-placeholder">
+                <div className="d-flex flex-column align-items-center justify-content-center gap-2 border border-2 border-dashed border-dark p-5 app-hero-image-frame">
+                  <span className="app-hero-image-icon" style={{ fontSize: "3rem" }}>🖼️</span>
+                  <span className="font-monospace small">[ HERO IMAGE ]</span>
+                  <span className="font-monospace small text-secondary">placeholder</span>
+                </div>
+              </div>
+
+              {/* Right half - Title + Description + Button */}
+              <div className="col-12 col-md-6 d-flex flex-column align-items-center justify-content-center px-4 px-md-5 py-5">
+                <h1 className="h2 h-md-1 fw-bold text-center border-bottom border-2 border-dark pb-3 mb-4">
+                  ¡Bienvenido a<br />Spill the Stats!
+                </h1>
+
+                <BionicText 
+                  isActive={isBionicActive}
+                  className="text-center small text-md-base leading-relaxed font-monospace border border-dashed border-secondary p-4 p-md-5 d-block app-hero-description"
+                  style={{ maxWidth: "500px" }}
+                  text="En nuestra página encontrarás los datos más recientes de League of Legends LAN, para buscar los mejores campeones y builds, counters, winrates y mucho más. Crea una cuenta para recomendaciones personalizadas con nuestro algoritmo personal de SpillTheStats."
+                />
+
+                <div className="mt-4">
+                  <button className="btn btn-outline-dark border-2 px-5 py-3 font-monospace small text-uppercase tracking-wide rounded-0">
+                    Crea una Cuenta
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          } />
 
-          {/* Right half - Title + Description + Button */}
-          <div className="col-12 col-md-6 d-flex flex-column align-items-center justify-content-center px-4 px-md-5 py-5">
-            <h1 className="h2 h-md-1 fw-bold text-center border-bottom border-2 border-dark pb-3 mb-4">
-              ¡Bienvenido a<br />Spill the Stats!
-            </h1>
-
-          <BionicText 
-            isActive={isBionicActive}
-            className="text-center small text-md-base leading-relaxed font-monospace border border-dashed border-secondary p-4 p-md-5 d-block app-hero-description"
-            text="En nuestra página encontrarás los datos más recientes de League of Legends LAN, para buscar los mejores campeones y builds, counters, winrates y mucho más. Crea una cuenta para recomendaciones personalizadas con nuestro algoritmo personal de SpillTheStats."
-          />
-
-            <div className="mt-4">
-              <button className="btn btn-outline-dark border-2 px-5 py-3 font-monospace small text-uppercase tracking-wide rounded-0">
-                Crea una Cuenta
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+          <Route path="/profile" element={<ProfilePage />} />
+        </Routes>
+      </main>
 
       {/* Footer */}
       <footer className="w-100 border-top border-2 border-dark mt-auto">
         <div className="container-fluid px-4 px-md-5 py-4">
           <div className="row">
-            {/* Left side */}
             <div className="col-12 col-md-6 d-flex flex-column justify-content-between border-bottom border-md-bottom-0 border-md-end border-dark pb-3 pb-md-0 mb-3 mb-md-0 pe-md-4">
               <div className="font-monospace small">
                 <p className="mb-0">Made with ❤ by CocoaTeaDevs</p>
               </div>
-
               <div className="d-flex align-items-center gap-4 mt-3">
                 <div className="d-flex align-items-center justify-content-center border border-dashed border-dark app-footer-mark">
                   <span className="font-monospace app-footer-mark-label">LOGO</span>
@@ -169,14 +168,12 @@ export default function App() {
               </div>
             </div>
 
-            {/* Right side - Two columns */}
             <div className="col-12 col-md-6 d-flex justify-content-md-end gap-5 pt-2 pt-md-0 ps-md-4">
               <div className="d-flex flex-column gap-2">
                 <h4 className="font-monospace small fw-bold border-bottom border-dark pb-1 mb-1">Ayuda</h4>
                 <a href="#" className="font-monospace small text-dark text-decoration-none hover-underline">FAQ</a>
                 <a href="#" className="font-monospace small text-dark text-decoration-none hover-underline">Contact Us</a>
               </div>
-
               <div className="d-flex flex-column gap-2">
                 <h4 className="font-monospace small fw-bold border-bottom border-dark pb-1 mb-1">Otros</h4>
                 <a href="#" className="font-monospace small text-dark text-decoration-none hover-underline">Política de Privacidad</a>
@@ -184,8 +181,6 @@ export default function App() {
             </div>
           </div>
         </div>
-
-        {/* Bottom border line */}
         <div className="h-1 bg-dark"></div>
       </footer>
     </div>
